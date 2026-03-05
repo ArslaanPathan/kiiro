@@ -3,6 +3,15 @@
 
 package manifest
 
+import (
+	"fmt"
+	"encoding/json"
+	"net/http"
+	"log"
+	"io"
+	"errors"
+)
+
 type KiiroToml struct {
 	Name string `toml:"pkgname"`
 	Version string `toml:"version"`
@@ -12,3 +21,7 @@ type KiiroToml struct {
 	Depends []string `toml:"deps"`
 }
 
+func FetchKiiroToml(url string) (*KiiroToml, error) {
+	fmt.Println("Fetching kiiro.toml...")
+	return nil, errors.New("not implemented")
+}

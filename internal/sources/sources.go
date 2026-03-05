@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
-	"log"
 	"io"
 )
 
@@ -22,7 +21,6 @@ func FetchPackageListing(url string) (*PackageListing, error) {
 
 	res, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 
@@ -30,20 +28,25 @@ func FetchPackageListing(url string) (*PackageListing, error) {
 	res.Body.Close()
 
 	if res.StatusCode > 299 {
-		log.Fatalf("Response failed with status code: %d", res.StatusCode)
 		return nil, err
 	}
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 
-	var packageListing PackageListing
-	err = json.Unmarshal(body, &packageListing)
+	packageListing, err := ParsePackageListing(body)
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	fmt.Println("Fetched package listing!")
+	return packageListing, nil
+}
+
+func ParsePackageListing(pkgListingJSON []byte) (*PackageListing, error) {
+	var packageListing PackageListing
+	err := json.Unmarshal(pkgListingJSON, &packageListing)
+	if err != nil {
+		return nil, err
+	}
 	return &packageListing, nil
 }
