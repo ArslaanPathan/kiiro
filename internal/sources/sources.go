@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
+	"log"
+	"io"
 )
 
 type PackageListing struct {
@@ -18,7 +20,7 @@ type PackageListing struct {
 func FetchPackageListing(url string) (*PackageListing, error) {
 	fmt.Println("Fetching package listing...")
 
-	resp, err := http.Get(url)
+	res, err := http.Get(url)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
@@ -37,8 +39,9 @@ func FetchPackageListing(url string) (*PackageListing, error) {
 	}
 
 	var packageListing PackageListing
-	err := json.Unmarshal(body, &packageListing)
+	err = json.Unmarshal(body, &packageListing)
 	if err != nil {
+		log.Fatal(err)
 		return nil, err
 	}
 	fmt.Println("Fetched package listing!")
